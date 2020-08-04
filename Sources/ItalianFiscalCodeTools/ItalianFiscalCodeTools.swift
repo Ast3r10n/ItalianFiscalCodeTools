@@ -7,65 +7,65 @@
 import Foundation
 
 public enum ItalianFiscalCodeTools {
-  static func checkFiscalCode(_ fiscalCode: String,
-                       name: String,
-                       surname: String,
-                       birthDate: String,
-                       birthPlace: String) throws -> Bool {
-
-    let meseLettere = ["A", "B", "C", "D", "E", "H", "L", "M", "P", "R", "S", "T"]
-    try ItalianFiscalCodeTools.validateFiscalCode(fiscalCode.uppercased())
-
-    let formatter = DateFormatter()
-    formatter.dateFormat = "dd/MM/yyyy"
-    guard let date = formatter.date(from: birthDate) else {
-      throw NSError(domain: "ItalianFiscalCodeTools", code: 5, userInfo: [
-        NSLocalizedDescriptionKey: "data nascita errata"
-      ])
-    }
-
-    /*
-     let cfCalc = CFCalc(name: nome, surname: cognome, female: true, date: date, codComune: luogoNascita)
-     print(codiceFiscale)
-     print(cfCalc)
-     */
-
-    let calendar = Calendar.current
-    let year = calendar.component(.year, from: date) % 100
-    let month = calendar.component(.month, from: date)
-    let day = calendar.component(.day, from: date)
-
-    if let fiscalCodeYear = Int(fiscalCode.dropFirst(6).prefix(2)),
-      fiscalCodeYear != year {
-
-      throw NSError(domain: "ItalianFiscalCodeTools", code: 1, userInfo: [
-        NSLocalizedDescriptionKey: "anno nascita non coincide"
-      ])
-    }
-
-
-    if fiscalCode.dropFirst(8).prefix(1) != meseLettere[month - 1] {
-      throw NSError(domain: "ItalianFiscalCodeTools", code: 2, userInfo: [
-        NSLocalizedDescriptionKey: "mese nascita non coincide"
-      ])
-    }
-
-    if let fiscalCodeDay = Int(fiscalCode.dropFirst(9).prefix(2)) {
-      if fiscalCodeDay != day && fiscalCodeDay != (day + 40) {
-        throw NSError(domain: "ItalianFiscalCodeTools", code: 3, userInfo: [
-          NSLocalizedDescriptionKey: "giorno nascita non coincide"
-        ])
-      }
-    }
-
-    if cities[birthPlace.uppercased()] != String(fiscalCode.dropFirst(11).prefix(3)) {
-      throw NSError(domain: "ItalianFiscalCodeTools", code: 4, userInfo: [
-        NSLocalizedDescriptionKey: "luogo di nascita errato"
-      ])
-    }
-
-    return true
-  }
+//  static func checkFiscalCode(_ fiscalCode: String,
+//                       name: String,
+//                       surname: String,
+//                       birthDate: String,
+//                       birthPlace: String) throws -> Bool {
+//
+//    let meseLettere = ["A", "B", "C", "D", "E", "H", "L", "M", "P", "R", "S", "T"]
+//    try ItalianFiscalCodeTools.validateFiscalCode(fiscalCode.uppercased())
+//
+//    let formatter = DateFormatter()
+//    formatter.dateFormat = "dd/MM/yyyy"
+//    guard let date = formatter.date(from: birthDate) else {
+//      throw NSError(domain: "ItalianFiscalCodeTools", code: 5, userInfo: [
+//        NSLocalizedDescriptionKey: "Invalid birth date."
+//      ])
+//    }
+//
+//    /*
+//     let cfCalc = CFCalc(name: nome, surname: cognome, female: true, date: date, codComune: luogoNascita)
+//     print(codiceFiscale)
+//     print(cfCalc)
+//     */
+//
+//    let calendar = Calendar.current
+//    let year = calendar.component(.year, from: date) % 100
+//    let month = calendar.component(.month, from: date)
+//    let day = calendar.component(.day, from: date)
+//
+//    if let fiscalCodeYear = Int(fiscalCode.dropFirst(6).prefix(2)),
+//      fiscalCodeYear != year {
+//
+//      throw NSError(domain: "ItalianFiscalCodeTools", code: 1, userInfo: [
+//        NSLocalizedDescriptionKey: "Invalid birth year."
+//      ])
+//    }
+//
+//
+//    if fiscalCode.dropFirst(8).prefix(1) != meseLettere[month - 1] {
+//      throw NSError(domain: "ItalianFiscalCodeTools", code: 2, userInfo: [
+//        NSLocalizedDescriptionKey: "Invalid birth month."
+//      ])
+//    }
+//
+//    if let fiscalCodeDay = Int(fiscalCode.dropFirst(9).prefix(2)) {
+//      if fiscalCodeDay != day && fiscalCodeDay != (day + 40) {
+//        throw NSError(domain: "ItalianFiscalCodeTools", code: 3, userInfo: [
+//          NSLocalizedDescriptionKey: "Invalid birth day."
+//        ])
+//      }
+//    }
+//
+//    if cities[birthPlace.uppercased()] != String(fiscalCode.dropFirst(11).prefix(3)) {
+//      throw NSError(domain: "ItalianFiscalCodeTools", code: 4, userInfo: [
+//        NSLocalizedDescriptionKey: "Invalid birth place."
+//      ])
+//    }
+//
+//    return true
+//  }
 
   /// Validates a given Fiscal Code.
   ///
@@ -73,7 +73,7 @@ public enum ItalianFiscalCodeTools {
   public static func validateFiscalCode(_ fiscalCode: String) throws {
     guard fiscalCode.count == 16 else {
       throw NSError(domain: "ItalianFiscalCodeTools", code: 3, userInfo: [
-        NSLocalizedDescriptionKey: "La lunghezza del Codice Fiscale non è corretta. Deve essere 16 caratteri."
+        NSLocalizedDescriptionKey: "The Fiscal Code must be 16 characters in length."
       ])
     }
 
@@ -81,7 +81,7 @@ public enum ItalianFiscalCodeTools {
 
     guard var lastCharacter = fiscalCode.popLast()?.utf8.first else {
       throw NSError(domain: "ItalianFiscalCodeTools", code: 3, userInfo: [
-        NSLocalizedDescriptionKey: "Errore inatteso."
+        NSLocalizedDescriptionKey: "Unexpected Error."
       ])
     }
 
@@ -92,7 +92,7 @@ public enum ItalianFiscalCodeTools {
     let predicate = NSPredicate(format:"SELF MATCHES %@", regEx)
     guard predicate.evaluate(with: fiscalCode) else {
       throw NSError(domain: "ItalianFiscalCodeTools", code: 3, userInfo: [
-        NSLocalizedDescriptionKey: "Il Codice Fiscale contiene dei caratteri non validi."
+        NSLocalizedDescriptionKey: "The Fiscal Code contains invalid characters."
       ])
     }
 
@@ -121,7 +121,7 @@ public enum ItalianFiscalCodeTools {
 
     if lastCharacter != checkChar {
       throw NSError(domain: "ItalianFiscalCodeTools", code: 3, userInfo: [
-        NSLocalizedDescriptionKey: "codice fiscale errato"
+        NSLocalizedDescriptionKey: "Fiscal Code invalid."
       ])
     }
 
